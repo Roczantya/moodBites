@@ -11,7 +11,7 @@ const tintColorDark = '#fff';
 export const Colors = {
   light: {
     text: '#11181C',
-    background: '#fff',
+    background: '#FFF5E4',
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',
@@ -39,9 +39,9 @@ export const Fonts = Platform.select({
     mono: 'ui-monospace',
   },
   default: {
-    sans: 'normal',
+    sans: 'PlusJakartaSans_400Regular',
     serif: 'serif',
-    rounded: 'normal',
+    rounded: 'PlusJakartaSans_600SemiBold', // Misalnya
     mono: 'monospace',
   },
   web: {

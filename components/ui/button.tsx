@@ -1,0 +1,29 @@
+import { Colors } from '@/constants/colors';
+import { Pressable, StyleSheet } from 'react-native';
+import { TextBold } from './customFont';
+
+type Props = {
+  label: string;
+  onPress: () => void;
+  color?: string;
+};
+
+export default function Button({ label, onPress, color = Colors.accent }: Props) {
+  return (
+    <Pressable style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
+      <TextBold style={styles.text}>{label}</TextBold>
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 19,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 16,
+  },
+});
