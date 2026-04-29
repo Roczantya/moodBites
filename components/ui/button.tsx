@@ -1,6 +1,6 @@
-import { Colors } from '@/constants/colors';
-import { Pressable, StyleSheet } from 'react-native';
-import { TextBold } from './customFont';
+import { Colors } from "@/constants/colors";
+import { Pressable, StyleSheet } from "react-native";
+import { TextBold } from "./customFont";
 
 type Props = {
   label: string;
@@ -8,9 +8,16 @@ type Props = {
   color?: string;
 };
 
-export default function Button({ label, onPress, color = Colors.accent }: Props) {
+export default function Button({
+  label,
+  onPress,
+  color = Colors.accent,
+}: Props) {
   return (
-    <Pressable style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
+    <Pressable
+      style={[styles.button, { backgroundColor: color }]}
+      onPress={onPress}
+    >
       <TextBold style={styles.text}>{label}</TextBold>
     </Pressable>
   );
@@ -18,12 +25,13 @@ export default function Button({ label, onPress, color = Colors.accent }: Props)
 
 const styles = StyleSheet.create({
   button: {
-    padding: 19,
+    padding: 14,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
+    width: "100%",
   },
   text: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
 });

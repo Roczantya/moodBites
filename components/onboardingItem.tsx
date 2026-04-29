@@ -1,17 +1,17 @@
-// File: moodBites/components/onboardingItem.tsx
-import { View, Image, StyleSheet } from 'react-native';
-import Button from '@/components/ui/button';
-import { TextRegular, TextBold } from '@/components/ui/customFont';
+// moodBites/components/onboardingItem.tsx
 
-type Props = {
-  image: any;
+import React from "react";
+import { View, Image, StyleSheet } from "react-native";
+import { TextBold, TextRegular } from "./ui/customFont";
+import Button from "./ui/button";
+interface Props {
+  image: any; // Adjust type as needed, e.g., ImageSourcePropType
   title: string;
   description: string;
-  backgroundColor: string;
+  backgroundColor?: string;
   onNext: () => void;
   isLast: boolean;
-};
-
+}
 export default function OnboardingItem({
   image,
   title,
@@ -22,15 +22,17 @@ export default function OnboardingItem({
 }: Props) {
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Image source={image} style={styles.image} />
+      {/* Container Konten: Menarik semua ke tengah vertikal */}
+      <View style={styles.contentContainer}>
+        <Image source={image} style={styles.image} />
+        <TextBold style={styles.title}>{title}</TextBold>
+        <TextRegular style={styles.desc}>{description}</TextRegular>
+      </View>
 
-      <TextBold style={styles.title}>{title}</TextBold>
-      <TextRegular style={styles.desc}>{description}</TextRegular>
-
-      <Button
-        label={isLast ? 'Mulai' : 'Next'}
-        onPress={onNext}
-      />
+      {/* Container Tombol: Berada di bawah konten */}
+      <View style={styles.buttonContainer}>
+        <Button label={isLast ? "Mulai" : "Next"} onPress={onNext} />
+      </View>
     </View>
   );
 }
@@ -38,23 +40,33 @@ export default function OnboardingItem({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 100,
     paddingHorizontal: 30,
-    justifyContent: 'flex-start',
+    paddingBottom: 100, // Beri ruang agar tidak menabrak pagination
+  },
+  contentContainer: {
+    flex: 1, // Mengambil sisa ruang agar konten di tengah
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     width: 250,
     height: 250,
-    alignSelf: 'center',
+    resizeMode: "contain",
     marginBottom: 40,
   },
   title: {
-    fontSize: 30,
-    marginBottom: 30,
+    fontSize: 22,
+    textAlign: "center",
+    marginBottom: 20,
   },
   desc: {
-    fontSize: 20,
-    color: '#555',
-    marginBottom: 50
+    fontSize: 15,
+    color: "#555",
+    textAlign: "center",
+    lineHeight: 22,
+  },
+  buttonContainer: {
+    width: "100%",
+    paddingBottom: 20,
   },
 });

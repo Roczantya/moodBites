@@ -1,42 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import { router } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import OnboardingItem from '@/components/onboardingItem';
-import { onboardingData } from '@/constants/onBoarding';
-import { useThemeFonts } from '@/hooks/useThemeFonts';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  useWindowDimensions,
+  Animated,
+} from "react-native";
+import { router } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 
-// Tahan splash screen agar tidak hilang otomatis
+import OnboardingItem from "@/components/onboardingItem";
+import OnboardingPagination from "@/components/ui/onboardpagination";
+import { onboardingData } from "@/constants/onBoarding";
+import { useThemeFonts } from "@/hooks/useThemeFonts";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
-  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const { width, height } = useWindowDimensions();
   const { fontsLoaded, fontError } = useThemeFonts();
 
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const flatListRef = useRef<FlatList>(null);
+
   useEffect(() => {
-    // Cek apakah font sudah selesai load atau ada error
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
 
+  // Fungsi navigasi ke halaman berikutnya
   const handleNext = () => {
-    if (index < onboardingData.length - 1) {
-      setIndex(index + 1);
+    if (currentIndex < onboardingData.length - 1) {
+      flatListRef.current?.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true,
+      });
     } else {
-      router.replace('/login');
+      router.replace("../auth");
     }
   };
 
-  // SANGAT PENTING: Jika font belum siap, jangan render UI dulu
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  // Pastikan referensi fungsi ini statis agar tidak error
+  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index || 0);
+    }
+  }).current;
+
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
+
+  // WAJIB: Supaya scrollToIndex tahu lebar tiap halaman
+  const getItemLayout = (_: any, index: number) => ({
+    length: width,
+    offset: width * index,
+    index,
+  });
+
+  if (!fontsLoaded && !fontError) return null;
 
   return (
-    <OnboardingItem
-      {...onboardingData[index]}
-      onNext={handleNext}
-      isLast={index === onboardingData.length - 1}
-    />
+    <View style={styles.container}>
+      <FlatList
+        ref={flatListRef}
+        data={onboardingData}
+        horizontal
+        pagingEnabled
+        bounces={false}
+        showsHorizontalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false },
+        )}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        getItemLayout={getItemLayout}
+        renderItem={({ item, index }) => (
+          // View ini dipaksa setinggi layar penuh
+          <View style={{ width, height }}>
+            <OnboardingItem
+              {...item}
+              onNext={handleNext}
+              isLast={index === onboardingData.length - 1}
+            />
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      {/* pointerEvents="box-none" agar klik tembus ke tombol di bawahnya */}
+      <View style={styles.footer} pointerEvents="box-none">
+        <OnboardingPagination data={onboardingData} scrollX={scrollX} />
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FDF6ED",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 50, // Turunkan posisi sedikit
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+});
