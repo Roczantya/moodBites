@@ -1,37 +1,74 @@
-import { Colors } from "@/constants/colors";
-import { Pressable, StyleSheet } from "react-native";
+import React from "react";
+import { Pressable, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { Colors } from "@/constants/colors"; // Sesuaikan path constants kamu
 import { TextBold } from "./customFont";
+
+type ButtonVariant = "primary" | "accent" | "outline";
 
 type Props = {
   label: string;
   onPress: () => void;
-  color?: string;
+  variant?: ButtonVariant;
+  style?: ViewStyle; // Untuk override style container jika butuh mendadak
+  textStyle?: TextStyle; // Untuk override style teks
 };
 
 export default function Button({
   label,
   onPress,
-  color = Colors.accent,
+  variant = "accent", // Default-nya pakai style accent kamu yang lama
+  style,
+  textStyle,
 }: Props) {
+  // Gabungkan style berdasarkan variant
+  const buttonStyles = [
+    styles.baseButton,
+    variant === "primary" && styles.primaryButton,
+    variant === "accent" && styles.accentButton,
+    style, // Custom style dari luar
+  ];
+
   return (
     <Pressable
-      style={[styles.button, { backgroundColor: color }]}
+      style={({ pressed }) => [
+        ...buttonStyles,
+        pressed && { opacity: 0.7 }, // Efek feedback seperti TouchableOpacity
+      ]}
       onPress={onPress}
     >
-      <TextBold style={styles.text}>{label}</TextBold>
+      <TextBold style={[styles.baseText, textStyle]}>{label}</TextBold>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    padding: 14,
-    borderRadius: 10,
-    alignItems: "center",
+  baseButton: {
     width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  text: {
+  // Style Button lama kamu (Accent)
+  accentButton: {
+    padding: 14,
+    borderRadius: 50,
+    backgroundColor: Colors.accent,
+  },
+  // Style PrimaryButton (Figma style)
+  primaryButton: {
+    height: 55,
+    borderRadius: 50,
+    backgroundColor: Colors.primary || "#FF949A", // Pastikan Colors.primary ada
+    marginBottom: 25,
+    // Efek Shadow/Elevation
+    shadowColor: Colors.primary || "#FF949A",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 15,
+    elevation: 8,
+  },
+  baseText: {
     color: "#fff",
     fontSize: 16,
+    fontFamily: "PlusJakartaSans-Bold",
   },
 });

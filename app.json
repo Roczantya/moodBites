@@ -4,42 +4,43 @@
     "slug": "moodBites",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo-moodBites.png",
+    "color": "#feeedb",
     "scheme": "moodbites",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/logo-moodBites.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFF5E4"
+      "backgroundColor": "#feeedb"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#FFF5E4",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#feeedb",
+        "foregroundImage": "./assets/images/logo-moodBites.png",
+        "backgroundImage": "./assets/images/logo-moodBites.png",
+        "monochromeImage": "./assets/images/logo-moodBites.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png",
-      "backgroundColor": "#FFF5E4"
+      "favicon": "./assets/images/logo-moodBites.png",
+      "backgroundColor": "#feeedb"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/logo-moodBites.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#FFF5E4",
+          "backgroundColor": "#feeedb",
           "dark": {
             "backgroundColor": "#000000"
           }

@@ -1,6 +1,6 @@
 // components/ui/Typography.tsx
-import React from 'react';
-import { Text, TextProps, StyleSheet } from 'react-native';
+import React from "react";
+import { Text, TextProps, StyleSheet } from "react-native";
 
 // Bikin wrapper untuk Text Regular
 export function TextRegular(props: TextProps) {
@@ -65,29 +65,27 @@ export function TextBoldItalic(props: TextProps) {
 
 const styles = StyleSheet.create({
   regular: {
-    fontFamily: 'PlusJakartaSans_400Regular',
+    fontFamily: "PlusJakartaSans_400Regular",
   },
   regularitalic: {
-    fontFamily: 'PlusJakartaSans_400Regular_Italic',
+    fontFamily: "PlusJakartaSans_400Regular_Italic",
   },
   medium: {
-    fontFamily: 'PlusJakartaSans_500Medium',
+    fontFamily: "PlusJakartaSans_500Medium",
   },
   mediumitalic: {
-    fontFamily: 'PlusJakartaSans_500Medium_Italic',
+    fontFamily: "PlusJakartaSans_500Medium_Italic",
   },
   semibold: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: "PlusJakartaSans_600SemiBold",
   },
   semibolditalic: {
-    fontFamily: 'PlusJakartaSans_600SemiBold_Italic',
+    fontFamily: "PlusJakartaSans_600SemiBold_Italic",
   },
   bold: {
-    fontFamily: 'PlusJakartaSans_700Bold',
+    fontFamily: "PlusJakartaSans_700Bold",
   },
   bolditalic: {
-    fontFamily: 'PlusJakartaSans_700Bold_Italic',
+    fontFamily: "PlusJakartaSans_700Bold_Italic",
   },
-}
-
-);
+});
