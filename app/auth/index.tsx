@@ -1,5 +1,5 @@
 // File: moodBites/app/auth/index.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -7,28 +7,35 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { Colors } from "../../constants/colors"; // Pastikan path ini sesuai
-
-// Import Komponen Reusable
+import { Colors } from "../../constants/colors";
 import AuthHeader from "../../components/ui/authheader";
 import AuthToggle from "../../components/ui/authtoggle";
 import InputField from "../../components/ui/inputfield";
 import PrimaryButton from "../../components/ui/button";
-import { TextBold, TextMedium } from "@/components/ui/customFont";
+import { TextBold, TextMedium, TextSemiBold } from "@/components/ui/customFont";
+import { router } from "expo-router";
 
 export default function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true);
+  const [showToast, setShowToast] = useState(false); // State untuk notif inline
 
-  // State untuk menyimpan input data (Persiapan untuk integrasi)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
     if (isLogin) {
-      console.log("Proses Login dengan:", email, password);
+      console.log("Proses Login...");
+      router.push("/auth/firstsurvey");
     } else {
-      console.log("Proses Register dengan:", name, email, password);
+      // 1. Munculkan notifikasi
+      setShowToast(true);
+
+      // 2. Tunggu 2 detik, lalu pindah halaman
+      setTimeout(() => {
+        setShowToast(false);
+        router.push("/auth/otp");
+      }, 2500);
     }
   };
 
@@ -37,6 +44,15 @@ export default function AuthScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      {/* NOTIFIKASI INLINE (TOAST) */}
+      {showToast && (
+        <View style={styles.toastContainer}>
+          <TextSemiBold style={styles.toastText}>
+            ✓ Registrasi Berhasil! Kode OTP sedang dikirim...
+          </TextSemiBold>
+        </View>
+      )}
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -62,7 +78,6 @@ export default function AuthScreen() {
               icon="mail-outline"
               placeholder="hello@moodbites.com"
               keyboardType="email-address"
-              autoCapitalize="none"
               value={email}
               onChangeText={setEmail}
             />
@@ -77,7 +92,10 @@ export default function AuthScreen() {
             />
           </View>
 
-          <PrimaryButton label="Enter the Hearth" onPress={handleSubmit} />
+          <PrimaryButton
+            label={isLogin ? "Enter the Hearth" : "Join the Hearth"}
+            onPress={handleSubmit}
+          />
 
           <TextMedium style={styles.footerText}>
             By signing in, you agree to our{" "}
@@ -102,41 +120,50 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     paddingHorizontal: 20,
   },
-  screenTitle: {
-    alignSelf: "flex-start",
-    marginLeft: 10,
-    marginBottom: 10,
-    fontSize: 18,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: Colors.textPrimary,
-  },
   card: {
     backgroundColor: Colors.white,
     width: "100%",
     borderRadius: 50,
     padding: 25,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.05,
-    shadowRadius: 20,
     elevation: 5,
   },
   formContainer: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 30,
   },
   footerText: {
-    fontSize: 10,
-    top: 10,
+    fontSize: 12,
+    top: 15,
     color: Colors.optionalAccent + "99",
     textAlign: "center",
     paddingHorizontal: 20,
     fontFamily: "PlusJakartaSans-Medium",
   },
   linkText: {
-    fontSize: 10,
+    fontSize: 12,
     color: Colors.optionalAccent,
     fontFamily: "PlusJakartaSans-Bold",
+  },
+  // STYLING NOTIFIKASI (TOAST)
+  toastContainer: {
+    position: "absolute",
+    bottom: 30, // Muncul di atas layar
+    left: 20,
+    right: 20,
+    backgroundColor: "#A0D585", // Warna hijau sukses
+    padding: 15,
+    borderRadius: 5,
+    zIndex: 100, // Supaya berada di paling depan
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  toastText: {
+    color: Colors.textAccent + "CC",
+    textAlign: "center",
+    fontSize: 12,
+    fontFamily: "PlusJakartaSans-SemiBold",
   },
 });

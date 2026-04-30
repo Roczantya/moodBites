@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors";
+import { TextBoldItalic } from "./customFont";
 
 export default function AuthHeader() {
   return (
@@ -10,7 +11,9 @@ export default function AuthHeader() {
         <Ionicons name="restaurant-outline" size={32} color={Colors.white} />
       </View>
       <Text style={styles.brandName}>MoodBites</Text>
-      <Text style={styles.tagline}>Feeding your mood, one bite at a time.</Text>
+      <TextBoldItalic style={styles.tagline}>
+        Feeding your mood, one bite at a time.
+      </TextBoldItalic>
     </View>
   );
 }
@@ -37,8 +40,8 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 14,
-    color: Colors.white,
-    fontStyle: "italic",
-    fontWeight: "600",
+    fontFamily: "PlusJakartaSans-BoldItalic",
+    color: Colors.optionalAccent + "CC",
+    marginBottom: 3,
   },
 });

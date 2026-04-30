@@ -62,7 +62,13 @@ export function TextBoldItalic(props: TextProps) {
     </Text>
   );
 }
-
+export function ExtraBold(props: TextProps) {
+  return (
+    <Text {...props} style={[styles.extrabold, props.style]}>
+      {props.children}
+    </Text>
+  );
+}
 const styles = StyleSheet.create({
   regular: {
     fontFamily: "PlusJakartaSans_400Regular",
@@ -87,5 +93,8 @@ const styles = StyleSheet.create({
   },
   bolditalic: {
     fontFamily: "PlusJakartaSans_700Bold_Italic",
+  },
+  extrabold: {
+    fontFamily: "PlusJakartaSans_800ExtraBold",
   },
 });

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     height: 55,
     borderRadius: 50,
     backgroundColor: Colors.primary || "#FF949A", // Pastikan Colors.primary ada
-    marginBottom: 25,
+    bottom: 10,
     // Efek Shadow/Elevation
     shadowColor: Colors.primary || "#FF949A",
     shadowOffset: { width: 0, height: 8 },

@@ -5,7 +5,9 @@ import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_500Medium,
-  PlusJakartaSans_600SemiBold, // Kamu pakai "Medium" di linkText
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold_Italic,
+  PlusJakartaSans_800ExtraBold, // Kamu pakai "Medium" di linkText
 } from "@expo-google-fonts/plus-jakarta-sans";
 
 export default function RootLayout() {
@@ -15,6 +17,8 @@ export default function RootLayout() {
     "PlusJakartaSans-Bold": PlusJakartaSans_700Bold,
     "PlusJakartaSans-Medium": PlusJakartaSans_500Medium,
     "PlusJakartaSans-SemiBold": PlusJakartaSans_600SemiBold,
+    "PlusJakartaSans-BoldItalic": PlusJakartaSans_700Bold_Italic,
+    "PlusJakartaSans-ExtraBold": PlusJakartaSans_800ExtraBold,
   });
   return (
     <Stack screenOptions={{ headerShown: false }}>

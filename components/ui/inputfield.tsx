@@ -97,5 +97,6 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     marginLeft: 10,
+    color: Colors.textAccent + "99",
   },
 });
