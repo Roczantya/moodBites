@@ -1,16 +1,21 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import OnboardingScreen from '../app/onboarding/onboardingScreen';
+import React from "react";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import OnboardingScreen from "../app/index"; // Sesuaikan path ini dengan letak file OnboardingScreen kamu
 
-describe('OnboardingScreen', () => {
-  it('berpindah ke halaman berikutnya saat Next ditekan', () => {
-    const { getByText } = render(<OnboardingScreen />);
+jest.mock("@expo-google-fonts/plus-jakarta-sans", () => ({
+  useFonts: () => [true, null], // [loaded, error]
+}));
 
-    // klik next pertama
-    fireEvent.press(getByText('Next'));
+// Dalam test case kamu:
+it("berpindah ke halaman berikutnya saat Next ditekan", async () => {
+  const { findByText } = render(<OnboardingScreen />);
 
-    // cek apakah pindah ke halaman berikutnya
-    expect(getByText(/Kenali mood/i)).toBeTruthy();
+  // Gunakan findByText (pake await) supaya dia nunggu font/loading beres
+  const nextButton = await findByText("Next");
+  fireEvent.press(nextButton);
+
+  // Gunakan waitFor untuk pengecekan berikutnya
+  await waitFor(() => {
+    expect(findByText(/Kenali mood/i)).toBeTruthy();
   });
 });
-
