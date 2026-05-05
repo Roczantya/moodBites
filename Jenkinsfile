@@ -8,21 +8,22 @@ pipeline {
     environment {
         ANDROID_HOME     = '/opt/android-sdk'
         ANDROID_SDK_ROOT = '/opt/android-sdk'
-        "PATH+ANDROID"   = '/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools'
     }
 
     stages {
 
         stage('Environment Check') {
             steps {
-                sh '''
-                    echo "=== Environment Check ==="
-                    echo "Node: $(node -v)"
-                    echo "NPM: $(npm -v)"
-                    echo "ANDROID_HOME: $ANDROID_HOME"
-                    echo "PATH: $PATH"
-                    free -h
-                '''
+                withEnv(["PATH+ANDROID=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"]) {
+                    sh '''
+                        echo "=== Environment Check ==="
+                        echo "Node: $(node -v)"
+                        echo "NPM: $(npm -v)"
+                        echo "ANDROID_HOME: $ANDROID_HOME"
+                        echo "PATH: $PATH"
+                        free -h
+                    '''
+                }
             }
         }
 
@@ -45,7 +46,9 @@ pipeline {
 
         stage('Expo Prebuild') {
             steps {
-                sh 'npx expo prebuild --platform android --clean'
+                withEnv(["PATH+ANDROID=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"]) {
+                    sh 'npx expo prebuild --platform android --clean'
+                }
             }
         }
 
@@ -54,11 +57,9 @@ pipeline {
                 sh '''
                     cd android
 
-                    # Hapus entry lama yang bentrok
                     grep -v "org.gradle.jvmargs\\|org.gradle.daemon\\|org.gradle.parallel\\|REACT_NATIVE_ARCHITECTURES\\|org.gradle.workers" gradle.properties > gradle.properties.tmp
                     mv gradle.properties.tmp gradle.properties
 
-                    # Tulis konfigurasi baru
                     echo "REACT_NATIVE_ARCHITECTURES=arm64-v8a"                              >> gradle.properties
                     echo "org.gradle.daemon=false"                                            >> gradle.properties
                     echo "org.gradle.parallel=false"                                          >> gradle.properties
@@ -73,11 +74,13 @@ pipeline {
 
         stage('Build APK') {
             steps {
-                sh '''
-                    cd android
-                    chmod +x gradlew
-                    ./gradlew assembleRelease --no-daemon --max-workers=1
-                '''
+                withEnv(["PATH+ANDROID=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"]) {
+                    sh '''
+                        cd android
+                        chmod +x gradlew
+                        ./gradlew assembleRelease --no-daemon --max-workers=1
+                    '''
+                }
             }
         }
 
