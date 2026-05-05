@@ -38,6 +38,9 @@ pipeline {
                 sh 'npx jest --ci --forceExit --passWithNoTests'
             }
             post {
+                always {
+                    junit testResults: 'test-results/junit.xml', allowEmptyResults: true
+                }
                 failure {
                     error '❌ Testing gagal! Build dihentikan.'
                 }
