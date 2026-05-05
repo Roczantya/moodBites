@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node 24.15.0'
+        nodejs 'Node_24.15.0'
     }
 
     environment {
         ANDROID_HOME     = '/opt/android-sdk'
         ANDROID_SDK_ROOT = '/opt/android-sdk'
-        PATH             = "$PATH:/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"
+        "PATH+ANDROID"   = '/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools'
     }
 
     stages {
@@ -20,6 +20,7 @@ pipeline {
                     echo "Node: $(node -v)"
                     echo "NPM: $(npm -v)"
                     echo "ANDROID_HOME: $ANDROID_HOME"
+                    echo "PATH: $PATH"
                     free -h
                 '''
             }
@@ -33,12 +34,9 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'npx jest --ci --forceExit --passWithNoTests --reporters=default'
+                sh 'npx jest --ci --forceExit --passWithNoTests'
             }
             post {
-                always {
-                    echo '=== Test selesai ==='
-                }
                 failure {
                     error '❌ Testing gagal! Build dihentikan.'
                 }
