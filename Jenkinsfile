@@ -89,7 +89,7 @@ pipeline {
 
         stage('Deploy ke Server') {
             steps {
-                sshagent(credentials: ['<ID_CREDENTIAL_SSH_KAMU>']) {
+                sshagent(credentials: ['moodbites']) {
                     sh '''
                         APK_PATH=$(find . -type f -name "*.apk" | head -n 1)
 
