@@ -1,21 +1,22 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 import OnboardingScreen from "../app/index"; // Sesuaikan path ini dengan letak file OnboardingScreen kamu
 
 jest.mock("@expo-google-fonts/plus-jakarta-sans", () => ({
   useFonts: () => [true, null], // [loaded, error]
 }));
 
-// Dalam test case kamu:
 it("berpindah ke halaman berikutnya saat Next ditekan", async () => {
-  const { findByText } = render(<OnboardingScreen />);
+  // 1. Tambahkan findAllByText di sini
+  const { findByText, findAllByText } = render(<OnboardingScreen />);
 
-  // Gunakan findByText (pake await) supaya dia nunggu font/loading beres
-  const nextButton = await findByText("Next");
-  fireEvent.press(nextButton);
+  // 2. Benar-benar gunakan findAllByText
+  const nextButtons = await findAllByText("Next");
+  fireEvent.press(nextButtons[0]); // Klik tombol Next di slide pertama
 
-  // Gunakan waitFor untuk pengecekan berikutnya
-  await waitFor(() => {
-    expect(findByText(/Kenali mood/i)).toBeTruthy();
-  });
+  // 3. Pengecekan slide berikutnya.
+  // Catatan: findByText sudah otomatis menunggu elemen muncul,
+  // jadi kita tidak perlu membungkusnya lagi dengan waitFor()
+  const nextScreenText = await findByText(/Kenali mood/i);
+  expect(nextScreenText).toBeTruthy();
 });

@@ -68,7 +68,8 @@ export default function AuthScreen() {
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
-        router.push("/auth/otp");
+        // 👇 UBAH BARIS INI: Tambahkan parameter email
+        router.push({ pathname: "/auth/otp", params: { email: email } });
       }, 2500);
     }
   };
