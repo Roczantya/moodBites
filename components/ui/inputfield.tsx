@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     height: "100%",
-    color: Colors.textAccent + "60",
+    color: Colors.textAccent,
     fontSize: 14,
   },
   eyeIcon: {

@@ -5,22 +5,21 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert, // FIX 1: Jangan lupa import Alert
+  Alert,
 } from "react-native";
 import { LikertScale } from "../../components/ui/Skalasurvey";
 import { CheckboxGroup } from "../../components/ui/checkbox";
-import {
-  MoodKey,
-  DataType,
-  Responses,
-  MoodSection,
-} from "../../constants/surveystate";
+import { MoodKey, DataType, Responses } from "../../constants/surveystate";
 import { MOOD_SECTIONS, FLAVORS, MENU_CATEGORIES } from "../../constants/mood";
 import { Colors } from "../../constants/colors";
 import { router } from "expo-router";
 
 export default function MoodSurveyScreen() {
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  // Ref untuk ScrollView & Timer
+  const scrollViewRef = useRef<ScrollView>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [responses, setResponses] = useState<Responses>({
     moods: {
@@ -30,25 +29,33 @@ export default function MoodSurveyScreen() {
       happy: { desire: {}, intensity: {}, categories: [] },
       neutral: { desire: {}, intensity: {}, categories: [] },
       surprised: { desire: {}, intensity: {}, categories: [] },
-      disgusted: { desire: {}, intensity: {}, categories: [] },
+      disgusted: { desire: {}, intensity: {}, categories: [] }, // FIX TYPO: Hapus huruf 'i'
     },
   });
 
-  const scrollViewRef = useRef<ScrollView>(null);
-
+  // Auto-scroll ke atas setiap ganti step
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     }, 100);
+    return () => clearTimeout(timer);
   }, [currentStep]);
 
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  // Cleanup Toast Timer saat unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
+
   const showToast = (message: string) => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToastMessage(message);
-    setTimeout(() => {
+    toastTimerRef.current = setTimeout(() => {
       setToastMessage(null);
-    }, 3000); // Toast hilang otomatis setelah 3 detik
+    }, 3000);
   };
+
   const handleMoodChange = (
     moodKey: MoodKey,
     type: DataType,
@@ -73,24 +80,35 @@ export default function MoodSurveyScreen() {
       };
     });
   };
-
-  // --- FIX 2: Fungsi Validasi (Trigger Wajib Isi) ---
+  const moodInfo = MOOD_SECTIONS[currentStep];
+  const moodData = responses.moods[moodInfo.key];
+  if (!moodData) {
+    console.error(
+      `Data untuk mood "${moodInfo.key}" tidak ditemukan di state!`,
+    );
+    return (
+      <View
+        style={[
+          styles.mainContainer,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <Text style={{ color: "white" }}>
+          Memuat data mood atau terjadi kesalahan...
+        </Text>
+      </View>
+    );
+  }
   const validateAndProceed = (isSubmit: boolean = false) => {
-    const moodInfo = MOOD_SECTIONS[currentStep];
-    const moodData = responses.moods[moodInfo.key];
-
-    // Cek apakah 5 Desire diisi
+    // Validasi: Semua flavor harus dipilih (tidak boleh 0)
     const isDesireFilled = FLAVORS.every(
       (f) => moodData.desire[f] !== undefined && moodData.desire[f] > 0,
     );
-    // Cek apakah 5 Intensity diisi
     const isIntensityFilled = FLAVORS.every(
       (f) => moodData.intensity[f] !== undefined && moodData.intensity[f] > 0,
     );
-    // Cek apakah minimal 1 kategori dipilih
     const isCategoryFilled = moodData.categories.length > 0;
 
-    // Jika ada yang bolong, munculkan Alert dan tolak pindah step
     if (!isDesireFilled || !isIntensityFilled || !isCategoryFilled) {
       showToast(
         "Harap isi semua skala (1-5) dan minimal 1 kategori menu ya! 😅",
@@ -98,37 +116,42 @@ export default function MoodSurveyScreen() {
       return;
     }
 
-    // Jika lolos validasi
     if (isSubmit) {
-      console.log("Payload siap kirim:", JSON.stringify(responses, null, 2));
-      Alert.alert("Sukses!", "Data survey berhasil disubmit!");
-      // Tambahkan router.replace('/dashboard') di sini kalau mau pindah layar
-      router.replace("/auth");
+      console.log("Final Payload:", JSON.stringify(responses, null, 2));
+      Alert.alert("Sukses!", "Data survey berhasil disubmit!", [
+        { text: "OK", onPress: () => router.replace("/auth") },
+      ]);
     } else {
       setCurrentStep((prev) => prev + 1);
     }
   };
 
-  const moodInfo = MOOD_SECTIONS[currentStep];
-  const moodData = responses.moods[moodInfo.key];
-
-  const progressPercentage = ((
-    ((currentStep + 1) / MOOD_SECTIONS.length) *
-    100
-  ).toFixed(2) + "%") as any;
+  const totalSteps = MOOD_SECTIONS.length;
+  const progressPercentage =
+    (((currentStep + 1) / totalSteps) * 100).toFixed(0) + "%";
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.primary }}>
+    <View style={styles.mainContainer}>
+      {/* Progress Header */}
       <View style={styles.progressContainer}>
-        <Text style={styles.progressText}>Step {currentStep + 1} of 7</Text>
+        <Text style={styles.progressText}>
+          Step {currentStep + 1} of {totalSteps}
+        </Text>
         <View style={styles.progressBarBackground}>
           <View
-            style={[styles.progressBarFill, { width: progressPercentage }]}
+            style={[
+              styles.progressBarFill,
+              { width: progressPercentage as any },
+            ]}
           />
         </View>
       </View>
 
-      <ScrollView ref={scrollViewRef} style={{ flex: 1, padding: 20 }}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
+      >
         <Text style={styles.header}>{moodInfo.title}</Text>
         <Text style={styles.desc}>{moodInfo.desc}</Text>
 
@@ -141,7 +164,6 @@ export default function MoodSurveyScreen() {
             label={flavor}
             minLabel="Sangat Tidak"
             maxLabel="Pengen Banget"
-            // FIX 3: Ganti || 3 menjadi || 0 agar slider kosong di awal
             value={moodData.desire[flavor] || 0}
             onChange={(val: number) =>
               handleMoodChange(moodInfo.key, "desire", flavor, val)
@@ -158,7 +180,6 @@ export default function MoodSurveyScreen() {
             label={`Tingkat ${flavor.split(" /")[0]}`}
             minLabel="Sangat Ringan"
             maxLabel="Sangat Kuat"
-            // FIX 4: Ganti || 3 menjadi || 0 agar slider kosong di awal
             value={moodData.intensity[flavor] || 0}
             onChange={(val: number) =>
               handleMoodChange(moodInfo.key, "intensity", flavor, val)
@@ -167,7 +188,7 @@ export default function MoodSurveyScreen() {
         ))}
 
         <Text style={[styles.subHeader, { marginTop: 25 }]}>
-          Pilih kategori menu (Bisa {">"} 1)
+          Pilih kategori yang sesuai untuk mood {moodInfo.title.toLowerCase()}
         </Text>
         <CheckboxGroup
           options={MENU_CATEGORIES}
@@ -176,32 +197,21 @@ export default function MoodSurveyScreen() {
             handleMoodChange(moodInfo.key, "categories", null, val)
           }
         />
-        {toastMessage && (
-          <View style={styles.toastContainer}>
-            <Text style={styles.toastText}>{toastMessage}</Text>
-          </View>
-        )}
-        <View style={styles.navRow}>
-          {currentStep > 0 ? (
-            <TouchableOpacity
-              style={styles.btnOutline}
-              onPress={() => setCurrentStep((prev) => prev - 1)}
-            >
-              <Text style={styles.btnOutlineText}>Back</Text>
-            </TouchableOpacity>
-          ) : (
-            <View
-              style={[styles.btnOutline, { opacity: 0 }]}
-              pointerEvents="none"
-            >
-              <Text style={styles.btnOutlineText}>Back</Text>
-            </View>
-          )}
 
-          {currentStep < 6 ? (
+        {/* Navigation Buttons */}
+        <View style={styles.navRow}>
+          <TouchableOpacity
+            testID="back-button"
+            style={[styles.btnOutline, { opacity: currentStep === 0 ? 0 : 1 }]}
+            disabled={currentStep === 0}
+            onPress={() => setCurrentStep((prev) => prev - 1)}
+          >
+            <Text style={styles.btnOutlineText}>Back</Text>
+          </TouchableOpacity>
+
+          {currentStep < totalSteps - 1 ? (
             <TouchableOpacity
               style={styles.btnSolid}
-              // FIX 5: Gunakan fungsi validasi saat tombol Next ditekan
               onPress={() => validateAndProceed(false)}
             >
               <Text style={styles.btnSolidText}>Next</Text>
@@ -209,30 +219,36 @@ export default function MoodSurveyScreen() {
           ) : (
             <TouchableOpacity
               style={styles.btnSubmit}
-              // FIX 6: Gunakan fungsi validasi saat tombol Submit ditekan
               onPress={() => validateAndProceed(true)}
             >
               <Text style={styles.btnSolidText}>Submit</Text>
             </TouchableOpacity>
           )}
         </View>
-        <View style={{ height: 60 }} />
+
+        <View style={{ height: 40 }} />
       </ScrollView>
+
+      {/* Floating Toast - Berada di luar ScrollView agar tidak tertutup saat scroll */}
+      {toastMessage && (
+        <View style={styles.toastContainer}>
+          <Text style={styles.toastText}>{toastMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
 
-// ... (Styles-nya biarkan persis seperti yang Kanda miliki sebelumnya)
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: Colors.primary,
+  },
   progressContainer: {
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingTop: 50, // Sesuaikan dengan safe area
+    paddingBottom: 15,
     backgroundColor: Colors.primary,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     zIndex: 10,
   },
   progressText: {
@@ -252,13 +268,23 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accent,
     borderRadius: 4,
   },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+  },
   header: {
     fontSize: 26,
     fontWeight: "bold",
     marginTop: 10,
     color: Colors.textPrimary,
   },
-  desc: { fontSize: 16, marginBottom: 25, color: Colors.textSecondary },
+  desc: {
+    fontSize: 16,
+    marginBottom: 25,
+    color: Colors.textSecondary,
+  },
   subHeader: {
     fontSize: 18,
     fontWeight: "bold",
@@ -269,40 +295,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 40,
+    paddingBottom: 20,
   },
   btnOutline: {
     width: "48%",
     alignItems: "center",
     paddingVertical: 14,
-    paddingHorizontal: 24,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: Colors.textAccent,
     backgroundColor: Colors.white,
-  },
-  toastContainer: {
-    position: "absolute",
-    bottom: 40,
-    left: 20,
-    right: 20,
-    backgroundColor: Colors.optionalAccent + "CC", // Warna merah bata/pink gelap sesuai tema Kanda
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 999, // Supaya tampil paling depan menutupi semuanya
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  toastText: {
-    color: Colors.white,
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "center",
   },
   btnOutlineText: {
     color: Colors.textAccent,
@@ -313,7 +315,6 @@ const styles = StyleSheet.create({
     width: "48%",
     alignItems: "center",
     paddingVertical: 14,
-    paddingHorizontal: 35,
     borderRadius: 10,
     backgroundColor: Colors.accent,
   },
@@ -321,9 +322,33 @@ const styles = StyleSheet.create({
     width: "48%",
     alignItems: "center",
     paddingVertical: 14,
-    paddingHorizontal: 35,
     borderRadius: 10,
     backgroundColor: Colors.optionalAccent,
   },
-  btnSolidText: { color: Colors.white, fontWeight: "bold", fontSize: 16 },
+  btnSolidText: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  toastContainer: {
+    position: "absolute",
+    bottom: 50,
+    left: 20,
+    right: 20,
+    backgroundColor: "#E74C3C", // Warna Error (bisa diganti Colors.optionalAccent)
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    zIndex: 9999,
+  },
+  toastText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });
