@@ -1,21 +1,33 @@
-import { Text, View, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
+import Header from "@/components/ui/dashboard/header";
+import MoodSelector from "@/components/ui/dashboard/moodSelector";
+import RecommendationList from "@/components/ui/dashboard/recommendedlist";
+import BottomNavBar from "@/components/ui/dashboard/bottomNavbar";
+import { Colors } from "../../constants/colors";
 
-export default function Index() {
+export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Home screen</Text>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Header />
+          <MoodSelector />
+          <RecommendationList />
+        </ScrollView>
+        <BottomNavBar />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.primary,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#25292e",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    color: "#fff",
+    position: "relative",
   },
 });

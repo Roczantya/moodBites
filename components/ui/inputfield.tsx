@@ -8,11 +8,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/colors";
-import {
-  TextBold,
-  TextBoldItalic,
-  TextRegular,
-} from "@/components/ui/customFont";
+import { TextBold, TextBoldItalic, TextRegular } from "@/constants/customFont";
 
 interface InputFieldProps {
   label: string;
