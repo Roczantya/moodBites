@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-SemiBold",
     marginBottom: 20,
     color: Colors.textPrimary,
   },
@@ -137,10 +137,14 @@ const styles = StyleSheet.create({
   },
   numberText: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     width: 25,
     textAlign: "center",
   },
   labelRow: { flexDirection: "row", justifyContent: "space-between" },
-  minMaxText: { fontSize: 12, color: Colors.textSecondary },
+  minMaxText: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    fontFamily: "PlusJakartaSans-Bold",
+  },
 });

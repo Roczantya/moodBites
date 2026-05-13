@@ -246,15 +246,15 @@ const styles = StyleSheet.create({
   },
   progressContainer: {
     paddingHorizontal: 20,
-    paddingTop: 50, // Sesuaikan dengan safe area
-    paddingBottom: 15,
+    paddingTop: 30, // Sesuaikan dengan safe area
+    paddingBottom: 20,
     backgroundColor: Colors.primary,
     zIndex: 10,
   },
   progressText: {
     fontSize: 14,
     color: Colors.textSecondary,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     marginBottom: 8,
   },
   progressBarBackground: {
@@ -276,18 +276,19 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 26,
-    fontWeight: "bold",
     marginTop: 10,
+    fontFamily: "PlusJakartaSans-ExtraBold",
     color: Colors.textPrimary,
   },
   desc: {
     fontSize: 16,
     marginBottom: 25,
-    color: Colors.textSecondary,
+    fontFamily: "PlusJakartaSans-Regular",
+    color: Colors.textPrimary + "CC", // Warna sedikit lebih terang untuk deskripsi
   },
   subHeader: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-SemiBold",
     marginBottom: 15,
     color: Colors.textAccent,
   },
@@ -308,8 +309,8 @@ const styles = StyleSheet.create({
   },
   btnOutlineText: {
     color: Colors.textAccent,
-    fontWeight: "bold",
-    fontSize: 16,
+    fontFamily: "PlusJakartaSans-Bold",
+    fontSize: 14,
   },
   btnSolid: {
     width: "48%",
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
   },
   btnSolidText: {
     color: Colors.white,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 16,
   },
   toastContainer: {
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
   toastText: {
     color: "white",
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Medium",
     textAlign: "center",
   },
 });

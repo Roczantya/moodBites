@@ -1,8 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { Colors } from "@/constants/colors"; // Sesuaikan path constants kamu
-import { TextBold } from "../../constants/customFont";
-
+import { TextBold } from "@/constants/customFont"; // Sesuaikan path custom font kamu
 type ButtonVariant = "primary" | "accent" | "outline";
 
 type Props = {

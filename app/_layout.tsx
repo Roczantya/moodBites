@@ -7,6 +7,7 @@ import {
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold_Italic,
+  PlusJakartaSans_800ExtraBold_Italic,
   PlusJakartaSans_800ExtraBold, // Kamu pakai "Medium" di linkText
 } from "@expo-google-fonts/plus-jakarta-sans";
 
@@ -18,6 +19,7 @@ export default function RootLayout() {
     "PlusJakartaSans-Medium": PlusJakartaSans_500Medium,
     "PlusJakartaSans-SemiBold": PlusJakartaSans_600SemiBold,
     "PlusJakartaSans-BoldItalic": PlusJakartaSans_700Bold_Italic,
+    "PlusJakartaSans-ExtraBoldItalic": PlusJakartaSans_800ExtraBold_Italic,
     "PlusJakartaSans-ExtraBold": PlusJakartaSans_800ExtraBold,
   });
   return (
@@ -28,7 +30,7 @@ export default function RootLayout() {
       */}
       <Stack.Screen name="index" />
       <Stack.Screen name="auth" />
-      <Stack.Screen name="home" />
+      <Stack.Screen name="dashboard" />
     </Stack>
   );
 }

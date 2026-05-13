@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontSize: 24,
-    fontFamily: "PlusJakartaSans-BoldItalic",
+    fontFamily: "PlusJakartaSans-ExtraBoldItalic",
     color: Colors.optionalAccent,
   },
   bellContainer: {

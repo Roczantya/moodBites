@@ -85,6 +85,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.textAccent,
     borderRadius: 3,
   },
-  checkboxText: { fontSize: 16, color: Colors.textPrimary },
-  checkboxTextSelected: { fontWeight: "bold", color: Colors.textAccent },
+  checkboxText: {
+    fontSize: 16,
+    color: Colors.textPrimary,
+    fontFamily: "PlusJakartaSans-SemiBold",
+  },
+  checkboxTextSelected: {
+    fontFamily: "PlusJakartaSans-SemiBold",
+    color: Colors.textAccent,
+  },
 });
