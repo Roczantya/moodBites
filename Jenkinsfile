@@ -95,7 +95,7 @@ pipeline {
 
         stage('Deploy ke Server') {
             steps {
-                sshagent(credentials: ['moodbites']) {
+                sshagent(credentials: ['moodbites-host-ssh']) {
                     sh '''
                         APK_PATH=$(find . -type f -name "*.apk" | head -n 1)
 
