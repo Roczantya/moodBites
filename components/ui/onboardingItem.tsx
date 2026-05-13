@@ -2,7 +2,7 @@
 
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { TextBold, TextRegular } from "./customFont";
+import { TextBold, TextRegular } from "../../constants/customFont";
 import Button from "./button";
 interface Props {
   image: any; // Adjust type as needed, e.g., ImageSourcePropType

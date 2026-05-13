@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { Colors } from "@/constants/colors"; // Sesuaikan path constants kamu
-import { TextBold } from "./customFont";
+import { TextBold } from "../../constants/customFont";
 
 type ButtonVariant = "primary" | "accent" | "outline";
 

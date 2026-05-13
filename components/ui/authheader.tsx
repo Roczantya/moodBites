@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors";
-import { TextBoldItalic } from "./customFont";
+import { TextBoldItalic } from "../../constants/customFont";
 
 export default function AuthHeader() {
   return (

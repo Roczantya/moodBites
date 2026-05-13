@@ -13,7 +13,7 @@ import AuthHeader from "../../components/ui/authheader";
 import AuthToggle from "../../components/ui/authtoggle";
 import InputField from "../../components/ui/inputfield";
 import PrimaryButton from "../../components/ui/button";
-import { TextBold, TextMedium, TextSemiBold } from "@/components/ui/customFont";
+import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
 import { router } from "expo-router";
 
 export default function AuthScreen() {
@@ -63,7 +63,7 @@ export default function AuthScreen() {
 
     if (isLogin) {
       console.log("Proses Login...");
-      router.push("/auth/firstsurvey");
+      router.push("/dashboard/home");
     } else {
       setShowToast(true);
       setTimeout(() => {

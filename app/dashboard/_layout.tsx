@@ -6,7 +6,7 @@ export default function Homelayout() {
       screenOptions={{
         // Ini kunci untuk menghilangkan bar putih di atas
         headerShown: false,
-        contentStyle: { backgroundColor: "#FDF6ED" }, // Agar background krem merata
+        contentStyle: {}, // Agar background krem merata
       }}
     >
       <Stack.Screen name="home" />
