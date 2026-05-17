@@ -9,7 +9,7 @@ export default function AuthLayout() {
         contentStyle: { backgroundColor: "#FDF6ED" }, // Agar background krem merata
       }}
     >
-      <Stack.Screen name="login" />
+      <Stack.Screen name="index" />
       <Stack.Screen name="otp" />
       <Stack.Screen name="firstsurvey" />
     </Stack>

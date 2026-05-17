@@ -1,36 +1,77 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../../constants/colors";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 
 export default function BottomNavBar() {
+  const pathname = usePathname(); // Ambil rute aktif saat ini
+
+  // Cek apakah rute tertentu sedang aktif
+  const isHomeActive = pathname === "/dashboard/home";
+  const isNfcActive = pathname === "/dashboard/nfc";
+  const isProfilActive = pathname === "/dashboard/profil";
+
   return (
     <View style={styles.container}>
+      {/* Tombol NFC Floating */}
+      <TouchableOpacity
+        style={[
+          styles.centerButton,
+          // Contoh: Jika di halaman NFC, warnanya sedikit berubah atau tetap solid
+          { backgroundColor: isNfcActive ? Colors.accent : Colors.third },
+          { opacity: isNfcActive ? 1 : 0.9 },
+        ]}
+        onPress={() => router.push("/dashboard/nfc")}
+        activeOpacity={0.8}
+      >
+        <MaterialCommunityIcons
+          name="contactless-payment-circle-outline"
+          size={30}
+          color={isNfcActive ? Colors.white : Colors.optionalAccent}
+        />
+        <Text
+          style={[
+            styles.nfcText, // Ini mengambil fontSize, fontFamily, dll.
+            { color: isNfcActive ? Colors.white : Colors.optionalAccent }, // Ini mengatur warna secara dinamis
+          ]}
+        >
+          NFC
+        </Text>
+      </TouchableOpacity>
+
       <View style={styles.navBar}>
         {/* Beranda Tab */}
         <TouchableOpacity
           style={styles.tab}
           onPress={() => router.push("/dashboard/home")}
         >
-          <Ionicons name="home" size={24} color={Colors.optionalAccent} />
-          <Text style={styles.tabText}>BERANDA</Text>
+          <Ionicons
+            name={isHomeActive ? "home" : "home-outline"} // Berubah ikon jika aktif
+            size={24}
+            color={isHomeActive ? Colors.optionalAccent : Colors.optionalAccent} // Warna aktif
+          />
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: isHomeActive
+                  ? Colors.optionalAccent
+                  : Colors.optionalAccent,
+              },
+            ]}
+          >
+            BERANDA
+          </Text>
         </TouchableOpacity>
 
-        {/* NFC Center Button */}
-        <View style={styles.centerButtonWrapper}>
-          <TouchableOpacity
-            style={styles.centerButton}
-            onPress={() => router.push("/dashboard/nfc")}
-          >
-            <MaterialCommunityIcons
-              name="contactless-payment-circle-outline"
-              size={28}
-              color={Colors.white}
-            />
-            <Text style={styles.nfcText}>NFC</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.spacer} />
 
         {/* Profil Tab */}
         <TouchableOpacity
@@ -38,11 +79,24 @@ export default function BottomNavBar() {
           onPress={() => router.push("/dashboard/profil")}
         >
           <Ionicons
-            name="person-outline"
+            name={isProfilActive ? "person" : "person-outline"}
             size={24}
-            color={Colors.optionalAccent}
+            color={
+              isProfilActive ? Colors.optionalAccent : Colors.optionalAccent
+            }
           />
-          <Text style={styles.tabText}>PROFIL</Text>
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: isProfilActive
+                  ? Colors.optionalAccent
+                  : Colors.optionalAccent,
+              },
+            ]}
+          >
+            PROFIL
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -55,59 +109,58 @@ const styles = StyleSheet.create({
     bottom: 30,
     left: 0,
     right: 0,
-    alignItems: "center",
+    alignItems: "center", // Ini otomatis menengahkan semua anak (navBar & centerButton)
   },
   navBar: {
     flexDirection: "row",
     backgroundColor: "#FFF7E8",
-    width: "75%",
+    width: "85%", // Ditingkatkan sedikit agar tidak terlalu sempit di HP kecil
     height: 70,
-    borderRadius: 40,
+    borderRadius: 35,
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 10,
     borderWidth: 1,
-    borderColor: "#FBE6E6", // Outline tipis
+    borderColor: "#FBE6E6",
   },
   tab: {
+    flex: 1, // Agar area tekan seimbang
     alignItems: "center",
     justifyContent: "center",
+  },
+  spacer: {
+    width: 70, // Lebarnya sama dengan centerButton agar Beranda & Profil terdorong rapi
   },
   tabText: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     color: Colors.optionalAccent,
     marginTop: 4,
   },
-  centerButtonWrapper: {
-    position: "absolute",
-    left: "50%",
-    marginLeft: -15, // Menyesuaikan agar tepat di tengah
-    top: -25,
-    alignItems: "center",
-  },
   centerButton: {
     backgroundColor: Colors.accent,
-    width: 65,
-    height: 65,
+    width: 70,
+    height: 70,
     borderRadius: 35,
     justifyContent: "center",
     alignItems: "center",
+    position: "absolute",
+    top: -25, // Floating di atas bar
+    zIndex: 10, // Pastikan di atas navBar
     shadowColor: Colors.accent,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.4,
     shadowRadius: 10,
-    elevation: 8,
+    elevation: 12,
   },
   nfcText: {
-    color: Colors.white,
     fontSize: 10,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     marginTop: 2,
   },
 });

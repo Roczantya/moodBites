@@ -1,7 +1,7 @@
 // moodBites/components/onboardingItem.tsx
 
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Platform } from "react-native";
 import { TextBold, TextRegular } from "../../constants/customFont";
 import Button from "./button";
 interface Props {
@@ -36,34 +36,46 @@ export default function OnboardingItem({
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 30,
-    paddingBottom: 100, // Beri ruang agar tidak menabrak pagination
+    backgroundColor: "#FFF8E7", // Warna krem agar estetik
+    // Solusi agar tidak mepet status bar di Android
+    paddingTop: Platform.OS === "android" ? 40 : 0,
+    paddingHorizontal: 24,
+    paddingBottom: 100,
   },
-  contentContainer: {
-    flex: 1, // Mengambil sisa ruang agar konten di tengah
+  imageContainer: {
+    marginTop: 20, // Memberi jarak agar ilustrasi lebih "bernafas"
+    height: "40%", // Membatasi tinggi agar teks tidak terdorong ke bawah layar
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   image: {
     width: 250,
     height: 250,
     resizeMode: "contain",
-    marginBottom: 40,
+    // MarginBottom dihapus karena sudah diatur oleh imageContainer
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 22,
+    fontFamily: "PlusJakartaSans-ExtraBold", // Sesuai dengan desain MoodBites
     textAlign: "center",
     marginBottom: 20,
+    color: "#000",
   },
   desc: {
     fontSize: 15,
     color: "#555",
     textAlign: "center",
     lineHeight: 22,
+    fontFamily: "PlusJakartaSans-Medium",
   },
   buttonContainer: {
     width: "100%",
